@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - My Fullstack App{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-5xl pt-4 sm:pt-8 w-full">
+    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+        <!-- Dashboard Header Card -->
+        <div class="relative px-6 py-12 sm:p-14 overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-indigo-700 to-purple-800"></div>
+            <!-- Decorative circle -->
+            <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-white opacity-10"></div>
+            
+            <div class="relative z-10 flex flex-col sm:flex-row items-center justify-between text-white">
+                <div>
+                    <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Welcome back, {{ name }}!</h1>
+                    <p class="mt-3 text-indigo-100 text-lg sm:max-w-xl">You've successfully logged in. This is your personal dashboard where you can see all your recent activity and statistics.</p>
+                </div>
+                <div class="mt-6 sm:mt-0 flex-shrink-0">
+                    <div class="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center backdrop-filter backdrop-blur-sm border border-white border-opacity-30">
+                        <span class="text-3xl font-bold">{{ name[0]|upper }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="p-6 sm:p-10 bg-gray-50">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                <svg class="w-6 h-6 text-indigo-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                Weather Forecast Search
+            </h2>
+            
+            <form method="POST" action="{{ url_for('dashboard') }}" class="mb-10">
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <input type="text" name="city" placeholder="Enter city or location name..." required class="flex-grow px-5 py-4 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm text-lg transition duration-200">
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-md transition duration-200 transform hover:-translate-y-1 flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        Check Weather
+                    </button>
+                </div>
+            </form>
+
+            {% if error %}
+            <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-8 rounded-r-lg shadow-sm">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-red-700 font-medium">{{ error }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if weather_data %}
+            <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center mt-4">
+                <svg class="w-5 h-5 text-indigo-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                Current Weather in {{ weather_data.city }}{% if weather_data.country %}, {{ weather_data.country }}{% endif %}
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+                <div class="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-6 text-white shadow-lg transform transition hover:scale-105 duration-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="text-blue-100 uppercase tracking-wider text-sm font-semibold">Temperature</div>
+                        <svg class="w-8 h-8 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    </div>
+                    <div class="text-5xl font-extrabold">{{ weather_data.temperature }}°C</div>
+                    <div class="mt-4 text-blue-100 text-sm">Real-time local temperature</div>
+                </div>
+
+                <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-6 text-white shadow-lg transform transition hover:scale-105 duration-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="text-indigo-100 uppercase tracking-wider text-sm font-semibold">Condition</div>
+                        <svg class="w-8 h-8 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    </div>
+                    <div class="text-3xl font-extrabold mt-2 leading-tight drop-shadow-sm">{{ weather_data.description }}</div>
+                    <div class="mt-4 text-indigo-100 text-sm">Current weather state</div>
+                </div>
+
+                <div class="bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl p-6 text-white shadow-lg transform transition hover:scale-105 duration-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="text-purple-100 uppercase tracking-wider text-sm font-semibold">Wind Speed</div>
+                        <svg class="w-8 h-8 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                    </div>
+                    <div class="text-5xl font-extrabold">{{ weather_data.windspeed }} <span class="text-2xl font-semibold opacity-80">km/h</span></div>
+                    <div class="mt-4 text-purple-100 text-sm">Local wind conditions</div>
+                </div>
+            </div>
+
+            {% if weather_data.forecast %}
+            <!-- 7-Day Forecast Section -->
+            <div class="mt-12">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6 border-b border-gray-200 pb-3 flex items-center">
+                    <svg class="w-6 h-6 text-indigo-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    7-Day Forecast
+                </h3>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+                    {% for day in weather_data.forecast %}
+                    <div class="bg-white rounded-2xl p-5 text-center shadow-sm border border-gray-100 transform transition hover:-translate-y-2 hover:shadow-lg duration-300">
+                        <div class="font-extrabold text-gray-800 text-lg mb-0.5">{{ day.day }}</div>
+                        <div class="text-sm text-gray-400 mb-4 font-medium">{{ day.date }}</div>
+                        <div class="text-5xl mb-4 drop-shadow-sm">{{ day.emoji }}</div>
+                        <div class="text-xs text-indigo-600 font-bold uppercase tracking-wider h-8 flex items-center justify-center">{{ day.desc }}</div>
+                        <div class="mt-4 pt-4 border-t border-gray-50 flex justify-center space-x-3 text-base">
+                            <span class="font-extrabold text-gray-900" title="Maximum Temperature">{{ day.max_temp }}°</span>
+                            <span class="font-medium text-gray-400" title="Minimum Temperature">{{ day.min_temp }}°</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Temperature Graph Section -->
+            <div class="mt-12 bg-white rounded-2xl shadow-sm border border-gray-100 p-6 transform transition hover:shadow-md duration-300">
+                <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                    <svg class="w-5 h-5 text-indigo-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
+                    Temperature Trends
+                </h3>
+                <div class="relative h-72 w-full">
+                    <canvas id="forecastChart"></canvas>
+                </div>
+            </div>
+
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    const forecastData = {{ weather_data.forecast | tojson | safe }};
+                    if(forecastData && forecastData.length > 0) {
+                        const labels = forecastData.map(d => d.day);
+                        const maxTemps = forecastData.map(d => d.max_temp);
+                        const minTemps = forecastData.map(d => d.min_temp);
+
+                        const ctx = document.getElementById('forecastChart').getContext('2d');
+                        new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: labels,
+                                datasets: [
+                                    {
+                                        label: 'Max Temperature (°C)',
+                                        data: maxTemps,
+                                        borderColor: 'rgba(239, 68, 68, 1)',
+                                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                                        borderWidth: 3,
+                                        fill: true,
+                                        tension: 0.4,
+                                        pointRadius: 4,
+                                        pointBackgroundColor: 'rgba(239, 68, 68, 1)'
+                                    },
+                                    {
+                                        label: 'Min Temperature (°C)',
+                                        data: minTemps,
+                                        borderColor: 'rgba(59, 130, 246, 1)',
+                                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                                        borderWidth: 3,
+                                        fill: true,
+                                        tension: 0.4,
+                                        pointRadius: 4,
+                                        pointBackgroundColor: 'rgba(59, 130, 246, 1)'
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: { 
+                                        position: 'top',
+                                        labels: { font: { family: "'Inter', sans-serif", weight: '600' } }
+                                    },
+                                    tooltip: {
+                                        mode: 'index',
+                                        intersect: false,
+                                        titleFont: { family: "'Inter', sans-serif" },
+                                        bodyFont: { family: "'Inter', sans-serif" }
+                                    }
+                                },
+                                scales: {
+                                    y: {
+                                        ticks: {
+                                            callback: function(value) { return value + '°'; },
+                                            font: { family: "'Inter', sans-serif" }
+                                        },
+                                        grid: { color: 'rgba(0,0,0,0.04)' }
+                                    },
+                                    x: {
+                                        ticks: { font: { family: "'Inter', sans-serif" } },
+                                        grid: { display: false }
+                                    }
+                                },
+                                interaction: {
+                                    mode: 'index',
+                                    intersect: false,
+                                }
+                            }
+                        });
+                    }
+                });
+            </script>
+            {% endif %}
+            {% else %}
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-10 text-center transition duration-300 hover:shadow-md">
+                <div class="mx-auto w-24 h-24 bg-indigo-50 text-indigo-400 rounded-full flex items-center justify-center mb-4 transform transition hover:-translate-y-2 duration-300">
+                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>
+                </div>
+                <h3 class="text-lg font-bold text-gray-900">No Weather Data Yet</h3>
+                <p class="mt-2 text-gray-500 font-medium">Enter a location above to see its current weather forecast instantly.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
