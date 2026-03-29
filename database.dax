@@ -1,0 +1,14 @@
+BEGIN TRANSACTION;
+CREATE TABLE user (
+	id INTEGER NOT NULL, 
+	username VARCHAR(150) NOT NULL, 
+	email VARCHAR(150) NOT NULL, 
+	password_hash VARCHAR(256) NOT NULL, 
+	PRIMARY KEY (id), 
+	UNIQUE (username), 
+	UNIQUE (email)
+);
+INSERT INTO "user" VALUES(1,'radesh','radeshnath40@gmail.com','pbkdf2:sha256:600000$jQSfkcH4mHsABqYf$9990ee972af591349acd09d42d21eee4cf4707379e4c5a6e65f7385f6b8c3981');
+INSERT INTO "user" VALUES(2,'testuser','test@test.com','pbkdf2:sha256:600000$T1f6Ayec69Cx1Vas$ee7df1db0294dd2945292b3f50e7b261e6a147c1f36d3717caf7a8aeeb562448');
+INSERT INTO "user" VALUES(3,'sainandhu','sainandhuresu@gmail.com','pbkdf2:sha256:600000$LjEi787UjCnT6rax$b56ea6619c68f93f4efcb7f4f9d9c9d268daedfa6ffa2f62769bd08eebd4ba5a');
+COMMIT;
